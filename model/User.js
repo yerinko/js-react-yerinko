@@ -1,4 +1,4 @@
-const mongoose = require('mongooseo');
+const mongoose = require('mongoose');
 
 const userSchema = mongoose.Schema({
     name: {
