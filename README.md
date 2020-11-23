@@ -1,1 +1,1 @@
-# js-react-yerinko
+# Node + React 기초
