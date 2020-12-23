@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const jwt = require('jsonwebtoken');
+const keys = require('../config/key');
 
 
 const userSchema = mongoose.Schema({
@@ -56,34 +57,26 @@ userSchema.pre("save", function (next) {
     }
 }); //*
 
-userSchema.methods.comparePassword = function (plainPassword, cb) {
-
-    // plainPassword 1234567 암호화된 비밀번호 ( plainPassword도 암호화하여 암호화된 비밀번호와 같은지 확인해야한다. )
-    bcrypt.compare(plainPassword, this.password, function(err, isMatch) {
-        if(err) return cb(err), // 틀리면 콜백에 err
-            cb(null, isMatch) // 맞으면 err없이 true
+// cb : call back
+userSchema.methods.comparePassword = function(plainPassword, cb){
+    // plainPassword를 암호화된 비밀번호와 일치하는지
+    bcrypt.compare(plainPassword, this.password, function(err, isMatch){
+        if(err) return cb(err);
+        cb(null, isMatch)
     })
+}
 
-};
-
-userSchema.methods.generateToken = function(cb) {
-
+userSchema.methods.generateToken = function(cb){
     var user = this;
-    console.log('user._id', user._id);
-
-    // jsonwebtoken을 이용해서 token 생성하기
-    var token = jwt.sign(user._id.toHexString(), 'secretToken');
-
-    // user._id + 'secretToken' = token;
-    // ->
-    // 'secretToken' -> user._id
+    // json web token 이용해서 token 생성하기
+    // user id 와 두번째 param 으로 토큰을 만들고, param 을 이용하여 나중에 userid를 찾아낸다.
+    var token = jwt.sign(user._id.toHexString(), "secretToken")
 
     user.token = token;
-    user.save(function(err, user) {
-        if ( err ) return cb(err);
+    user.save(function(err, user){
+        if(err) return cb(err);
         cb(null, user)
     })
-
 };
 
 const User = mongoose.model("User", userSchema);
