@@ -1,4 +1,4 @@
-const { User } = require('./model/User');
+const { User } = require('../model/User');
 
     let auth = (req, res, next) => {
 
@@ -10,7 +10,7 @@ const { User } = require('./model/User');
         // 토큰을 복호화 한 후 유저를 찾는다.
         User.findByToken(token, (err, user) => {
             if(err) throw err;
-            if(!user) return res.js({ isAuth: false, error: true })
+            if(!user) return res.js({ isAuth: false, error: true });
 
             req.token = token;
             req.user = user;
