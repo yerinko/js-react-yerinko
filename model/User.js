@@ -81,7 +81,7 @@ userSchema.methods.generateToken = function(cb){
 
 userSchema.statics.findByToken = function ( token , cb ) {
     var user = this;
-    user._id + '' = token;
+    // user._id + '' = token;
 
     // 토큰을 decode 한다.
     // jsonwebtoken 에 작성되어 있는 코드이다.
@@ -95,8 +95,7 @@ userSchema.statics.findByToken = function ( token , cb ) {
            cb(null, user)
        });
     });
-
-}
+};
 
 const User = mongoose.model("User", userSchema);
 
